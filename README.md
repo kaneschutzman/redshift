@@ -1,4 +1,4 @@
-This is a POC for a *rootkit* that I wrote a long time ago that overwrites the MSR and hijack the original syscall handler in order to provide a 'hidden' way to escalate the privileges. Additionally, the rootkit adds a new syscall that was created to handle the rootkit. This new syscall receives one argument, 1 or 0, enabling or disabling the rootkit.
+This is a POC for a *rootkit* that I wrote a long time ago that overwrites the MSR and hijack the interrupt handler in order to provide a 'hidden' way to escalate the privileges. Additionally, the rootkit adds a new syscall that was created to handle the rootkit. This new syscall receives one argument, 1 or 0, enabling or disabling the rootkit.
 
 Demonstration:
 ```
