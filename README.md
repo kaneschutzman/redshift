@@ -4,9 +4,9 @@ It has been tested on FreeBSD 10.0-RELEASE AMD64.
 
 Features:
 
-Hide a process
-Hide a module
-Escalate the privileges to root
+	Hide a process
+	Hide a module
+	Escalate the privileges to root
 
 Demonstration:
 
